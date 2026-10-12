@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+import fs from "node:fs";
 
 const INPUT_FILE = "abhang-input.txt";
 const OUTPUT_FILE = "tukaram_abhangs.json";
