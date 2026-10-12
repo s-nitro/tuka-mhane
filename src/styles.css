@@ -1,0 +1,485 @@
+/* ---------- Tokens ----------
+   indigo  = Vitthal's dark blue (सावळा)
+   mist    = morning over the Chandrabhaga
+   haldi   = turmeric, the colour of the Warkari pataka
+   tulsi   = the sacred basil green                          */
+:root {
+  --ink: #1b2547;
+  --ink-soft: #4a5578;
+  --mist: #e8edf4;
+  --paper: #ffffff;
+  --haldi: #e0a210;
+  --haldi-deep: #8a5b00;
+  --tulsi: #2e6b50;
+  --line: rgba(27, 37, 71, 0.14);
+  --bar-bg: #1b2547;
+  --bar-ink: #f4f2ea;
+  --shadow: 0 24px 48px -28px rgba(27, 37, 71, 0.45);
+
+  --serif: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', 'Kohinoor Devanagari', serif;
+  --sans: 'Mukta', 'Noto Sans Devanagari', 'Kohinoor Devanagari', system-ui, sans-serif;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #eef0f8;
+    --ink-soft: #b8bed8;
+    --mist: #0f1630;
+    --paper: #18224a;
+    --haldi: #f0b72b;
+    --haldi-deep: #f0c25a;
+    --tulsi: #7fd1a6;
+    --line: rgba(238, 240, 248, 0.16);
+    --bar-bg: #0a0f24;
+    --shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* ---------- Base ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mist);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--haldi);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* ---------- Top bar ---------- */
+.bar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: calc(0.65rem + env(safe-area-inset-top, 0px)) calc(1rem + env(safe-area-inset-right, 0px)) 0.65rem
+    calc(1rem + env(safe-area-inset-left, 0px));
+  background: var(--bar-bg);
+  color: var(--bar-ink);
+  border-bottom: 2px solid var(--haldi);
+}
+
+.brand {
+  margin: 0;
+  font: 400 1.4rem/1.2 var(--serif);
+  white-space: nowrap;
+}
+
+/* ---------- Search ---------- */
+.search {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-field {
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+}
+
+.search-field input {
+  width: 100%;
+  height: 2.6rem;
+  padding: 0 2.6rem 0 2.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--bar-ink);
+  font: 400 1rem var(--sans);
+}
+
+.search-field input::placeholder {
+  color: rgba(244, 242, 234, 0.72);
+}
+
+.search-field input:focus {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.search-clear {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--bar-ink);
+  cursor: pointer;
+}
+
+.results {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: calc(1rem + env(safe-area-inset-right, 0px));
+  width: min(40rem, calc(100vw - 2rem));
+  max-height: min(72vh, 34rem);
+  max-height: min(72dvh, 34rem);
+  overflow-y: auto;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.results ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.results-count,
+.results-empty {
+  margin: 0;
+  padding: 0.75rem 1rem 0.5rem;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.results-empty {
+  padding-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.result {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.result:hover,
+.result:focus-visible {
+  background: rgba(224, 162, 16, 0.14);
+  outline-offset: -3px;
+}
+
+.result-no {
+  font: 400 1.2rem/1.5 var(--serif);
+  color: var(--haldi-deep);
+}
+
+.result-body {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.result-line {
+  font: 400 1.05rem/1.6 var(--serif);
+}
+
+.result-snippet {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.more {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: none;
+  font-weight: 600;
+  color: var(--tulsi);
+  cursor: pointer;
+}
+
+/* ---------- Stage: arrows + card ---------- */
+.stage {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 78rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'prev card next'
+    '.    count .';
+  gap: 0.9rem 1.25rem;
+  align-items: center;
+  padding: 1.25rem calc(1.25rem + env(safe-area-inset-right, 0px)) calc(0.9rem + env(safe-area-inset-bottom, 0px))
+    calc(1.25rem + env(safe-area-inset-left, 0px));
+}
+
+.card-slot {
+  grid-area: card;
+  height: 100%;
+  min-height: 0;
+}
+
+.arrow-prev {
+  grid-area: prev;
+}
+
+.arrow-next {
+  grid-area: next;
+}
+
+.count {
+  grid-area: count;
+  margin: 0;
+  text-align: center;
+  font: 400 1.05rem/1.2 var(--serif);
+  color: var(--ink-soft);
+}
+
+.notice {
+  grid-area: card;
+  align-self: center;
+  margin: 0;
+  text-align: center;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.arrow:hover:not(:disabled) {
+  border-color: var(--haldi);
+}
+
+.arrow:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ---------- Card ---------- */
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card[data-dir='next'] {
+  animation: slide-in-next 0.24s ease-out;
+}
+
+.card[data-dir='prev'] {
+  animation: slide-in-prev 0.24s ease-out;
+}
+
+@keyframes slide-in-next {
+  from {
+    opacity: 0;
+    transform: translateX(26px);
+  }
+}
+
+@keyframes slide-in-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-26px);
+  }
+}
+
+.card-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 clamp(1.4rem, 5vw, 3.5rem) clamp(2rem, 5vh, 3.5rem);
+}
+
+.card-scroll:focus-visible {
+  outline-offset: -4px;
+}
+
+.card-body {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+/* The one bold element: a saffron pataka hanging from the card's top edge,
+   carrying the abhang number. */
+.flag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  min-width: 4.4rem;
+  padding: 0.8rem 0.8rem 2.1rem;
+  background: var(--haldi);
+  color: #1b2547;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%);
+}
+
+.flag-label {
+  font: 600 0.82rem/1 var(--sans);
+}
+
+.flag-number {
+  margin-top: 0.2rem;
+  font: 400 2rem/1.2 var(--serif);
+}
+
+.abhang {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.abhang-line {
+  margin: 0;
+  font: 400 clamp(1.3rem, 1rem + 1.1vw, 1.75rem) / 1.85 var(--serif);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+/* The ध्रु. refrain line is the one sung again and again; the gold rule
+   hangs in the margin so the text stays aligned with the other lines. */
+.abhang-line.refrain {
+  margin-left: -1.15rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--haldi);
+}
+
+.marker {
+  margin-left: 0.4em;
+  font-size: 0.78em;
+  white-space: nowrap;
+  color: var(--haldi-deep);
+}
+
+.meaning {
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.meaning-title {
+  margin: 0 0 1rem;
+  font: 600 1.1rem/1.2 var(--sans);
+  color: var(--tulsi);
+}
+
+.meaning p {
+  margin: 0 0 1rem;
+  font: 400 clamp(1.05rem, 1rem + 0.3vw, 1.2rem) / 2 var(--sans);
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.meaning p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Small screens: arrows move below the card ---------- */
+@media (max-width: 760px) {
+  .brand {
+    font-size: 1.15rem;
+  }
+
+  .stage {
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'card  card  card'
+      'prev  count next';
+    gap: 0.8rem;
+    padding-top: 0.75rem;
+    padding-left: calc(0.75rem + env(safe-area-inset-left, 0px));
+    padding-right: calc(0.75rem + env(safe-area-inset-right, 0px));
+  }
+
+  .arrow {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .card {
+    border-radius: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .arrow {
+    animation: none !important;
+    transition: none !important;
+  }
+}
